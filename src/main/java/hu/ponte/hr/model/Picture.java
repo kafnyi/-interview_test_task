@@ -1,4 +1,4 @@
-package hu.ponte.hr.controller;
+package hu.ponte.hr.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -7,10 +7,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -20,17 +17,20 @@ import java.util.Date;
 @AllArgsConstructor
 public class Picture {
 	@Id
+	@GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(nullable = false)
 	private long id;
 	private String name;
 	private String mimeType;
 	private long size;
+	@Lob
 	private String digitalSign;
 	@CreationTimestamp
 	private Date created_at;
 	@UpdateTimestamp
 	private Date updated_at;
 
-	public Picture(long id, String name, String mimeType, long size, String digitalSign){
+	public Picture(long id, String name, String mimeType, long size, String digitalSign) {
 		this.id = id;
 		setName(name);
 		setMimeType(mimeType);
@@ -38,13 +38,13 @@ public class Picture {
 		setDigitalSign(digitalSign);
 	}
 
-	public Picture(String name, String mimeType, long size){
+	public Picture(String name, String mimeType, long size) {
 		setName(name);
 		setMimeType(mimeType);
 		setSize(size);
 	}
 
-	public Picture (MultipartFile file){
+	public Picture(MultipartFile file) {
 		setName(file.getOriginalFilename());
 		setMimeType(file.getContentType());
 		setSize(file.getSize());
