@@ -31,4 +31,5 @@ public class ImageService {
 	public ImageMeta createImageMetaFromPicture(Picture picture) {
 		return new ImageMeta(String.valueOf(picture.getId()), picture.getName(), picture.getMimeType(), picture.getSize(), picture.getDigitalSign());
 	}
+
 }

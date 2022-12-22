@@ -9,6 +9,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.io.IOException;
+
 @Component
 @RequestMapping("api/file")
 public class UploadController {
@@ -22,7 +24,7 @@ public class UploadController {
 
 	@RequestMapping(value = "post", method = RequestMethod.POST)
 	@ResponseBody
-	public String handleFormUpload(@RequestParam("file") MultipartFile file) {
+	public String handleFormUpload(@RequestParam("file") MultipartFile file) throws IOException {
 		imageStore.store(file);
 		return "ok";
 	}
