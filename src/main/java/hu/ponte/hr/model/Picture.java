@@ -30,20 +30,6 @@ public class Picture {
 	@UpdateTimestamp
 	private Date updated_at;
 
-	public Picture(long id, String name, String mimeType, long size, String digitalSign) {
-		this.id = id;
-		setName(name);
-		setMimeType(mimeType);
-		setSize(size);
-		setDigitalSign(digitalSign);
-	}
-
-	public Picture(String name, String mimeType, long size) {
-		setName(name);
-		setMimeType(mimeType);
-		setSize(size);
-	}
-
 	public Picture(MultipartFile file) {
 		setName(file.getOriginalFilename());
 		setMimeType(file.getContentType());
