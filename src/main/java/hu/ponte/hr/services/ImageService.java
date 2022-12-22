@@ -4,11 +4,7 @@ import hu.ponte.hr.model.ImageMeta;
 import hu.ponte.hr.model.Picture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.File;
-import java.nio.file.FileAlreadyExistsException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -36,7 +32,4 @@ public class ImageService {
 		return new ImageMeta(String.valueOf(picture.getId()), picture.getName(), picture.getMimeType(), picture.getSize(), picture.getDigitalSign());
 	}
 
-	public ImageMeta createImageMetaFromPictureForPreview(Picture picture) {
-		return new ImageMeta(String.valueOf(picture.getId()), picture.getName(), picture.getMimeType(), picture.getSize(), picture.getOriginalBytes());
-	}
 }

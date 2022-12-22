@@ -4,12 +4,10 @@ import hu.ponte.hr.model.Picture;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.multipart.commons.CommonsMultipartFile;
 
-import java.io.*;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.IOException;
 
 @Service
 public class ImageStore {
@@ -41,22 +39,21 @@ public class ImageStore {
 	}
 
 	public void multipartFileToFile(MultipartFile originalFile) throws IOException {
-			String uploadsDir = "/uploads/";
-			MultipartFile file ;
-			file = originalFile;
-			if (!new File(FILE_DIR_PATH).exists()) {
-				new File(FILE_DIR_PATH).mkdir();
-			}
+		MultipartFile file;
+		file = originalFile;
+		if (!new File(FILE_DIR_PATH).exists()) {
+			new File(FILE_DIR_PATH).mkdir();
+		}
 
-			String orgName = file.getOriginalFilename();
-			String filePath = FILE_DIR_PATH + orgName;
-			File dest = new File(filePath);
-			file.transferTo(dest);
+		String orgName = file.getOriginalFilename();
+		String filePath = FILE_DIR_PATH + orgName;
+		File dest = new File(filePath);
+		file.transferTo(dest);
 
 	}
 
 	public String getOriginal(String name) throws IOException {
-		String filePath = FILE_DIR_PATH+name;
+		String filePath = FILE_DIR_PATH + name;
 		FileInputStream fileInputStream = new FileInputStream(filePath);
 		return new String(fileInputStream.readAllBytes());
 	}
