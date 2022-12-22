@@ -14,6 +14,7 @@ import java.util.Base64;
 public class SignService {
 
 	private final String PRIVATE_KEY_PATH = "src/main/resources/config/keys/key.private";
+	private final String PUBLIC_KEY_PATH = "src/main/resources/config/keys/key.private";
 
 	@Autowired
 	public SignService() {
@@ -21,24 +22,24 @@ public class SignService {
 
 	public String sign(String toSign) {
 		try {
-			return this.encodeToBase64(this.signWithSHA256withRSA(toSign, PRIVATE_KEY_PATH));
+			return new String(this.signWithSHA256withRSAAndBase64(toSign));
 		} catch (Exception e) {
 			System.err.println("Something bad happened :");
 			System.out.println(e);
 		}
-		return toSign;
+		return null;
 	}
 
-	private String encodeToBase64(String toEncode) {
-		byte[] encoded = Base64.getEncoder().encode(toEncode.getBytes());
-		return new String(encoded);
+	private byte[] signWithSHA256withRSAAndBase64(String toEncode) throws Exception {
+		return this.encodeWithBase64(this.encodeWithSHA256WithRSA(toEncode));
 	}
 
-	private String signWithSHA256withRSA(String toEncode, String privateKeyPath) throws Exception {
-		return this.encodeWithSHA256WithRSA(toEncode);
+	private byte[] encodeWithBase64(byte[] toEncode) {
+		byte[] encoded = Base64.getEncoder().encode(toEncode);
+		return encoded;
 	}
 
-	private String encodeWithSHA256WithRSA(String toEncode) throws Exception {
+	private byte[] encodeWithSHA256WithRSA(String toEncode) throws Exception {
 
 		byte[] privateKeyBytes;
 		try (FileInputStream fis = new FileInputStream(PRIVATE_KEY_PATH)) {
@@ -48,8 +49,44 @@ public class SignService {
 			Signature signature = Signature.getInstance("SHA256withRSA");
 			signature.initSign(keyFactory.generatePrivate(encodedKeySpec));
 			signature.update(toEncode.getBytes(StandardCharsets.UTF_8));
-			byte[] sigBytes = signature.sign();
-			return Base64.getEncoder().encodeToString(sigBytes);
+			return signature.sign();
 		}
 	}
+
+	/**
+	 * Felreertettem ezt egy kicsit...
+	 */
+	//public String decrypt(String toDecrypt) {
+	//	try {
+	//		return new String(decodeWithBase64(toDecrypt.getBytes()));
+	//	} catch (Exception e) {
+	//		System.err.println("Something bad happened :");
+	//		System.out.println(e);
+	//	}
+	//	return null;
+	//}
+	//private String decodeWithSHA256WithRSAAndBase64(byte[] todecode) throws Exception {
+	//	return new String(this.decodeWithSHA256WithRSA(decodeWithBase64(todecode)));
+//
+	//}
+//
+	//private String decodeWithBase64(byte[] toDecode) {
+	//	byte[] decoded = Base64.getDecoder().decode(toDecode);
+	//	return new String(decoded);
+	//}
+//
+	//private byte[] decodeWithSHA256WithRSA(String toDecode) throws Exception{
+//
+	//	byte[] publicKeyBytes;
+	//	try (FileInputStream fis = new FileInputStream(PUBLIC_KEY_PATH)){
+	//		publicKeyBytes = fis.readAllBytes();
+	//		PKCS8EncodedKeySpec encodedKeySpec = new PKCS8EncodedKeySpec(publicKeyBytes);
+	//		KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+	//		Signature signature = Signature.getInstance("SHA256withRSA");
+	//		signature.initVerify(keyFactory.generatePublic(encodedKeySpec));
+	//		signature.update(toDecode.getBytes(StandardCharsets.UTF_8));
+	//		byte[] signBytes = signature.sign();
+	//		return signBytes;
+	//	}
+	//}
 }

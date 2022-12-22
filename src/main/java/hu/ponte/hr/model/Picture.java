@@ -8,6 +8,7 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.*;
+import java.io.IOException;
 import java.util.Date;
 
 @Entity
@@ -25,15 +26,18 @@ public class Picture {
 	private long size;
 	@Lob
 	private String digitalSign;
+	@Lob
+	private String originalBytes;
 	@CreationTimestamp
 	private Date created_at;
 	@UpdateTimestamp
 	private Date updated_at;
 
-	public Picture(MultipartFile file) {
+	public Picture(MultipartFile file) throws IOException {
 		setName(file.getOriginalFilename());
 		setMimeType(file.getContentType());
 		setSize(file.getSize());
+		setOriginalBytes(file.getBytes());
 	}
 
 	public void setName(String name) {
@@ -50,6 +54,10 @@ public class Picture {
 
 	public void setDigitalSign(String digitalSign) {
 		this.digitalSign = digitalSign;
+	}
+
+	public void setOriginalBytes(byte[] bytes){
+		this.originalBytes = new String(bytes);
 	}
 
 }
